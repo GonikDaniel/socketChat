@@ -1,0 +1,19 @@
+{
+  "name": "socket-chat",
+  "version": "0.0.1",
+  "dependencies": {
+    "bootstrap": "latest",
+    "jquery": "latest",
+    "font-awesome": "latest"
+  },
+  "directory": "components",
+  "homepage": "https://github.com/GonikDaniel/socketChat",
+  "authors": [
+    "Gonik Daniel <gonik.daniel88@gmail.com>"
+  ],
+  "main": "server.js",
+  "moduleType": [
+    "node"
+  ],
+  "license": "free"
+}
