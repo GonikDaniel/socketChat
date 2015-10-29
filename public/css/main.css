@@ -20,3 +20,28 @@ body {
   height: 300px;
   overflow: scroll;
 }
+
+/*-------------------------------------------- 
+                 LOADING STYLES
+---------------------------------------------- */
+
+#mask {
+    background-color: #FFF;
+    height: 100%;
+    position: fixed;
+    width: 100%;
+    z-index: 10000000000;
+    top: 0px;
+    -webkit-transition: all 2s;
+    -moz-transition: all 2s;
+    -o-transition: all 2s;
+    -ms-transition: all 2s;
+    transition: all 2s;
+}
+
+.loader {
+    position: absolute;
+    margin: -63px 0 0 -100px;
+    top: 50%;
+    left: 50%;
+}

@@ -1,3 +1,9 @@
+var loader = document.getElementById("mask");
+setTimeout(function() {
+    loader.style.display = 'none';
+}, 4000);
+
+
 /*=================================
 = Functions and some global vars  =
 =================================*/
