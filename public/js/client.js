@@ -192,8 +192,6 @@ document.addEventListener('DOMContentLoaded', function(){
     });
 
     socket.on("show-history", function(history) {
-        console.log(history);
-        
         empty(msgs);
         var update = '';
         for (var i = 0; i < history.length; i++) {
