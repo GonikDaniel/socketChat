@@ -31,24 +31,24 @@ io.set("log level", 1);
 var people = {},
     chatHistory = {};
 
-io.sockets.on("connection", function(socket) {
-    socket.on("joinserver", function(name, device) {
+io.sockets.on("connection", function (socket) {
+    socket.on("joinserver", function(name, device) { 
         var exists = false;
 
         _.find(people, function(key, value) {
             if (key.name.toLowerCase() === name.toLowerCase()) {
-                 exits = true;
+                 exists = true;
                  return;
              }
         });
 
         if (exists) {
-            var randonNumber = Math.floor(Math.random() * 10001);
+            var randomNumber = Math.floor(Math.random() * 10001);
             do {
                proposedName = name + randomNumber;
                _.find(people, function(key, value) {
                    if (key.name.toLowerCase() === name.toLowerCase()) {
-                        exits = true;
+                        exists = true;
                         return;
                     }
                });
@@ -62,6 +62,11 @@ io.sockets.on("connection", function(socket) {
             io.sockets.emit("update-people", {people: people, count: sizePeople});
             socket.emit("joined"); //for geolocation
         }
+    });
+
+    socket.on("send", function(ms, msg) {
+        io.sockets.emit("chat", ms, people[socket.id], msg);
+        // socket.emit("isTyping", false);
     });
 });
 
