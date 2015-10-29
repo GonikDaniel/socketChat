@@ -2,10 +2,6 @@ body {
   margin: 20px;
 }
 
-#msg {
-  width: 500px;
-}
-
 #main-chat-screen, #errors {
     display: none;
 }

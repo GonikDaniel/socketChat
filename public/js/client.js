@@ -79,11 +79,13 @@ document.addEventListener('DOMContentLoaded', function(){
     
     var errors = document.getElementById('errors');
     var userNameInput = document.getElementById("userName");
-    userNameInput.focus();
     var msgs = document.getElementById('msgs');
     var msgInput = document.getElementById('msg');
     var people = document.getElementById('people');
     var chatForm = document.getElementById('chatForm');
+    var sendButton = document.getElementById('send');
+
+    userNameInput.focus();
 
     //remove default browser behavior for forms
     var forms = document.querySelectorAll('form');
@@ -181,17 +183,23 @@ document.addEventListener('DOMContentLoaded', function(){
         people.appendChild(online);
 
         each(data.people, function(a, obj) {
-            if (!("country" in obj)) {
-                html = "";
-            } else {
-                html = '<img class="flag flag-' + obj.country + '"/>';
-            }
             var person = document.createElement('li');
             person.id = obj.name;
             person.className = "list-group-item";
-            person.innerHTML = '<span>' + obj.name + '</span> <i class="fa fa-"' + obj.device + '"></i> ' + html;
+            person.innerHTML = '<span>' + obj.name + '</span> <i class="fa fa-"' + obj.device + '"></i> ';
             people.appendChild(person);
         });
+    });
+
+    socket.on("show-history", function(history) {
+        console.log(history);
+        
+        empty(msgs);
+        var update = '';
+        for (var i = 0; i < history.length; i++) {
+            update += '<li>' + history[i] + '</li>';
+            msgs.innerHTML = update;
+        }
     });
     
     /*=====  End of Updates  ======*/
@@ -210,7 +218,7 @@ document.addEventListener('DOMContentLoaded', function(){
 
     msgInput.addEventListener('keypress', function(e) {
        if (e.which === 13 && e.shiftKey) { // you can send msg by shift + enter
-            document.getElementById('send').click();
+            sendButton.click();
             msgInput.value = '';
             e.preventDefault();
        } else {
@@ -252,14 +260,24 @@ document.addEventListener('DOMContentLoaded', function(){
         newMsg.innerHTML = '<strong><span class="text-success">' + timeFormat(ms) + ' ' + person.name + '</span></strong>: ' + msg;
 
         msgs.appendChild(newMsg);
-
-        //clear typing field
-         // $("#"+person.name+"").remove();
-         // clearTimeout(timeout);
-         // timeout = setTimeout(timeoutFunction, 0);
     });
     
     /*=====  End of Typing and sending  ======*/
+    
+
+    /*==================================
+    =            Disconnect            =
+    ==================================*/
+    
+    socket.on("disconnect", function() {
+        var disconnectMsg = document.createElement('li');
+        disconnectMsg.innerHTML = '<strong><span class="text-warning">The server is not available</span></strong>';
+        msgs.appendChild(disconnectMsg);
+        msgs.setAttribute("disabled", "disabled");
+        sendButton.setAttribute("disabled", "disabled");
+    });
+    
+    /*=====  End of Disconnect  ======*/
     
 
 

@@ -29,7 +29,7 @@ server.listen(app.get('port'), app.get('ipaddr'), function() {
 io.set("log level", 1);
 
 var people = {},
-    chatHistory = {};
+    chatHistory = [];
 
 io.sockets.on("connection", function (socket) {
     socket.on("joinserver", function(name, device) { 
@@ -60,19 +60,32 @@ io.sockets.on("connection", function (socket) {
             io.sockets.emit("update", people[socket.id].name + " is online.");
             sizePeople = _.size(people);
             io.sockets.emit("update-people", {people: people, count: sizePeople});
-            socket.emit("joined"); //for geolocation
+            chatHistory.push(people[socket.id].name + " is online.");
+            socket.emit("show-history", chatHistory);
         }
     });
 
     socket.on("send", function(ms, msg) {
         io.sockets.emit("chat", ms, people[socket.id], msg);
-        // socket.emit("isTyping", false);
+        socket.emit("isTyping", false);
+        chatHistory.push('<span class="text-success"><strong>' + (new Date(ms)).toLocaleTimeString() + ' ' + people[socket.id].name + ':</strong></span> ' + msg);
     });
 
     socket.on("typing", function(data) {
         if (typeof people[socket.id] !== "undefined") {
             io.sockets.emit("isTyping", {isTyping: data, person: people[socket.id].name});
         }
+    });
+
+    socket.on("disconnect", function() {
+       if (typeof people[socket.id] !== "undefined") {
+            var msg = people[socket.id].name + " has disconnected from the server.";
+            io.sockets.emit("update", msg);
+            chatHistory.push(msg);
+            delete people[socket.id]; //delete user from people collection
+            sizePeople = _.size(people);
+            io.sockets.emit("update-people", {people: people, count: sizePeople});
+       } 
     });
 });
 
