@@ -209,14 +209,18 @@ document.addEventListener('DOMContentLoaded', function(){
     }
 
     msgInput.addEventListener('keypress', function(e) {
-       if (e.which !== 13) { // if enter is not hitted yet
-            if (!typing && msgInput === document.activeElement) {
-                typing = true;
-                socket.emit("typing", true);
-            } else {
-                clearTimeout(timeout);
-                timeout = setTimeout(clearTypingTimeout, 1500);
-            }
+       if (e.which === 13 && e.shiftKey) { // you can send msg by shift + enter
+            document.getElementById('send').click();
+            msgInput.value = '';
+            e.preventDefault();
+       } else {
+           if (!typing && msgInput === document.activeElement) {
+               typing = true;
+               socket.emit("typing", true);
+           } else {
+               clearTimeout(timeout);
+               timeout = setTimeout(clearTypingTimeout, 1500);
+           }
        }
     });
 
@@ -230,7 +234,7 @@ document.addEventListener('DOMContentLoaded', function(){
                 timeout = setTimeout(clearTypingTimeout, 1500);
             }
         } else {
-            document.getElementById(data.person + '_typing').remove();
+            if (document.getElementById(data.person + '_typing')) document.getElementById(data.person + '_typing').remove();
         }
     });
 

@@ -1,23 +1,26 @@
+body {
+  margin: 20px;
+}
+
+#msg {
+  width: 500px;
+}
+
 #main-chat-screen, #errors {
     display: none;
 }
 
-#login-screen, #main-chat-screen {
+#login-screen, #main-chat-screen, .main {
   padding-top: 10px;
 }
+
 .main {
-  padding-top: 10px;
   text-align: center;
 }
+
 #conversation {
   font-size: 18px;
   margin: 0px;
   height: 300px;
   overflow: scroll;
-}
-.final {
-  font-color: #000;
-}
-.interim {
-  font-color: #f00;
 }

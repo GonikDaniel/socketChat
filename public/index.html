@@ -28,19 +28,17 @@
         <div class="col-md-3">
             <ul id="people" class="list-group"></ul>
         </div>
-        <div class="col-md-6">
+        <div class="col-md-9">
             <div id="conversation">
                 <ul id="msgs" class="list-unstyled"></ul>
             </div>
             <form id="chatForm" class="form-inline">
                 <div class="form-group">
-                    <input type="text" class="form-control input-lg" placeholder="Your message" id="msg">
+                    <textarea name="msg" id="msg" class="form-control" placeholder="Your message"></textarea>
                 </div>
                 <input type="submit" name="send" id="send" value="Send" class="btn btn-success btn-lg">
+                <div><small class="text-muted">You can send your message by Shift + Enter</small></div>
             </form>
-        </div>
-        <div class="col-md-2">
-            <ul class="list-instyled" id="updates"></ul>
         </div>
     </div>
 
