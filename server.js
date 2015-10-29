@@ -68,6 +68,12 @@ io.sockets.on("connection", function (socket) {
         io.sockets.emit("chat", ms, people[socket.id], msg);
         // socket.emit("isTyping", false);
     });
+
+    socket.on("typing", function(data) {
+        if (typeof people[socket.id] !== "undefined") {
+            io.sockets.emit("isTyping", {isTyping: data, person: people[socket.id].name});
+        }
+    });
 });
 
 

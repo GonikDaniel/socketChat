@@ -1,6 +1,11 @@
 /*=================================
-=            Functions            =
+= Functions and some global vars  =
 =================================*/
+
+//global vars for typing feature
+var typing = false,
+    timeout;
+
 
 //some jQuery methods alternatives + some helpers
 function toggle(elem) {
@@ -76,6 +81,7 @@ document.addEventListener('DOMContentLoaded', function(){
     var userNameInput = document.getElementById("userName");
     userNameInput.focus();
     var msgs = document.getElementById('msgs');
+    var msgInput = document.getElementById('msg');
     var people = document.getElementById('people');
     var chatForm = document.getElementById('chatForm');
 
@@ -181,6 +187,7 @@ document.addEventListener('DOMContentLoaded', function(){
                 html = '<img class="flag flag-' + obj.country + '"/>';
             }
             var person = document.createElement('li');
+            person.id = obj.name;
             person.className = "list-group-item";
             person.innerHTML = '<span>' + obj.name + '</span> <i class="fa fa-"' + obj.device + '"></i> ' + html;
             people.appendChild(person);
@@ -194,12 +201,45 @@ document.addEventListener('DOMContentLoaded', function(){
     /*==========================================
     =            Typing and sending            =
     ==========================================*/
-    
+
+    //helper for typing feature
+    function clearTypingTimeout() {
+        typing = false;
+        socket.emit("typing", false);
+    }
+
+    msgInput.addEventListener('keypress', function(e) {
+       if (e.which !== 13) { // if enter is not hitted yet
+            if (!typing && msgInput === document.activeElement) {
+                typing = true;
+                socket.emit("typing", true);
+            } else {
+                clearTimeout(timeout);
+                timeout = setTimeout(clearTypingTimeout, 1500);
+            }
+       }
+    });
+
+    socket.on("isTyping", function(data) {
+        if (data.isTyping) {
+            if (!document.getElementById(data.person + '_typing')) {
+                var typingPerson = document.createElement('span');
+                typingPerson.id = data.person + '_typing';
+                typingPerson.innerHTML = '<span class="text-muted"><small><i class="fa fa-keyboard-o"></i> ' + data.person + ' is typing.</small>';
+                document.getElementById(data.person).appendChild(typingPerson);
+                timeout = setTimeout(clearTypingTimeout, 1500);
+            }
+        } else {
+            document.getElementById(data.person + '_typing').remove();
+        }
+    });
+
     chatForm.addEventListener('submit', function() {
-        var msg = document.getElementById('msg').value;
+        var msg = msgInput.value;
         if (msg) {
             socket.emit("send", new Date().getTime(), msg);
-            msg.value = '';
+            msgInput.value = '';
+            clearTypingTimeout();
         }
     });
 
@@ -208,6 +248,11 @@ document.addEventListener('DOMContentLoaded', function(){
         newMsg.innerHTML = '<strong><span class="text-success">' + timeFormat(ms) + ' ' + person.name + '</span></strong>: ' + msg;
 
         msgs.appendChild(newMsg);
+
+        //clear typing field
+         // $("#"+person.name+"").remove();
+         // clearTimeout(timeout);
+         // timeout = setTimeout(timeoutFunction, 0);
     });
     
     /*=====  End of Typing and sending  ======*/
