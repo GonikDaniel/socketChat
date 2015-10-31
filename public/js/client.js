@@ -177,7 +177,7 @@ document.addEventListener('DOMContentLoaded', function(){
     
     socket.on("update", function(msg) {
         var newMsg = document.createElement('li');
-        newMsg.innerHTML = msg;
+        newMsg.textContent = msg;
         msgs.appendChild(newMsg);
     });
 
@@ -260,10 +260,14 @@ document.addEventListener('DOMContentLoaded', function(){
     });
 
     socket.on("chat", function(ms, person, msg) {
-        var newMsg = document.createElement('li');
-        newMsg.innerHTML = '<strong><span class="text-success">' + timeFormat(ms) + ' ' + person.name + '</span></strong>: ' + msg;
+        if (msg.indexOf('<script>') === -1) {
+            var newMsg = document.createElement('li');
+            newMsg.innerHTML = '<strong><span class="text-success">' + timeFormat(ms) + ' ' + person.name + '</span></strong>: ' + msg;
 
-        msgs.appendChild(newMsg);
+            msgs.appendChild(newMsg);
+        } else {
+            alert("No scripts!!!");
+        }
     });
     
     /*=====  End of Typing and sending  ======*/
