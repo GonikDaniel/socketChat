@@ -2,7 +2,6 @@ Socket.io chat with node.js
 =========
 
 ## About ##
-- it's a test task for 2GIS
 - quite typical realization of chat working on web-sockets, using socket.io lib and node.js on server-side
 - saving message history even if you log out (you can find whole history after new login)
 - typing feature (you can always follow what's going on..)
